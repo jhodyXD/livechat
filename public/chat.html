@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Chat</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="../style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Chat Room</h2>
+      <div id="chatHistory" class="mb-3"></div>
+      <form id="messageForm" class="form-inline">
+        <input
+          type="text"
+          id="messageInput"
+          class="form-control mr-2"
+          placeholder="Ketik pesan..."
+          required
+        />
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        const socket = io();
+        const roomId = window.location.pathname.split("/").pop();
+
+        const userName = sessionStorage.getItem("userName");
+        const userEmail = sessionStorage.getItem("userEmail");
+        if (!userName || !userEmail) {
+          alert("Silakan isi nama dan email terlebih dahulu.");
+          window.location.href = "/";
+          return;
+        }
+
+        socket.emit("join room", roomId);
+        socket.emit("get chat history", roomId);
+        socket.on("chat history", function (history) {
+          $("#chatHistory").empty();
+
+          history.forEach((msg) => {
+            const messageClass = msg.sender === "user" ? "user" : "admin";
+            $("#chatHistory").append(`
+                        <div class="message ${messageClass}">
+                            <strong>${msg.sender}:</strong> ${msg.content}
+                            <div class="time">${msg.time}</div>
+                        </div>
+                    `);
+          });
+
+          $("#chatHistory").scrollTop($("#chatHistory")[0].scrollHeight);
+        });
+
+        $("#messageForm").submit(function (e) {
+          e.preventDefault();
+          const message = $("#messageInput").val();
+          const timestamp = new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          socket.emit("chat message", {
+            roomId,
+            msg: message,
+            userName,
+            userEmail,
+            time: timestamp,
+          });
+          $("#messageInput").val("");
+        });
+
+        socket.on("chat message", function (messageData) {
+          $("#chatHistory").append(`
+                    <div class="message ${messageData.sender}">
+                        <strong>${messageData.sender}:</strong> ${messageData.content}
+                        <div class="time">${messageData.time}</div>
+                    </div>
+                `);
+          $("#chatHistory").scrollTop($("#chatHistory")[0].scrollHeight);
+        });
+      });
+    </script>
+  </body>
+</html>

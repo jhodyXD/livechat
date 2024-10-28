@@ -1,0 +1,63 @@
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    flex-direction: column; /* Mengatur container sebagai kolom */
+    height: 100vh; /* Memenuhi tinggi layar */
+}
+
+#chatHistory {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1; /* Mengisi sisa ruang */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column; /* Mengatur pesan agar ditampilkan dalam kolom */
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    display: inline-block;
+    max-width: 75%;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.message.admin {
+    background-color: #e1ffc7;
+    align-self: flex-start; /* Pesan admin di sebelah kanan */
+}
+
+.message.user {
+    background-color: #dcf8c6;
+    align-self: flex-end; /* Pesan pengguna di sebelah kiri */
+}
+
+.time {
+    font-size: 0.75em;
+    color: #999;
+    position: absolute;
+    bottom: -15px;
+    right: 10px;
+}
+
+.form-inline {
+    margin-top: 10px; /* Memberikan sedikit jarak di atas form */
+    padding: 10px; /* Menambahkan padding pada form */
+    background-color: #fff; /* Latar belakang putih untuk form */
+    border-radius: 8px; /* Sudut yang membulat */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bayangan untuk form */
+}
+
+#messageInput {
+    flex: 1; /* Membuat input pesan mengisi sisa ruang */
+}
