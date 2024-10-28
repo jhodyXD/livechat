@@ -1,0 +1,20 @@
+{
+  "name": "japp-livechat",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "nodemon main.js",
+    "build": "terser public/all.page.js -o public/mains.js --compress --mangle"
+  },
+  "author": "jhody",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.1",
+    "socket.io": "^4.8.1",
+    "uuid": "^11.0.1"
+  },
+  "devDependencies": {
+    "terser": "^5.36.0"
+  }
+}
